@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from '../../layouts/Layout';
 
 const data = [
@@ -13,10 +13,9 @@ export default function SignIn(props) {
     const [items, setItems] = useState({
         wic: products.filter(({ eligible }) => eligible.includes('WIC')).map((product) => ({ ...product, currentQty: product.qty })),
         rest: products.map((product) => ({ ...product, currentQty: product.qty })),
-        products: products.map((product) => ({ ...product, currentQty: product.qty }))
+        products: products.map((product) => ({ ...product, currentQty: product.qty })),
+        selected: []
     });
-
-    const [selected, setSelected] = useState([]);
 
     const onClick = ({ state, action }) => {
         if (action.type === 'decrease') {
@@ -124,44 +123,37 @@ export default function SignIn(props) {
             const { checked, value } = action.event.target;
             
             if (checked) {
-                setSelected((prev) => ([ ...prev, value ]));
                 setItems((prev) => {
                     let rest = prev.rest.filter((p) => p._id !== state._id);
-
+                    let selected = [ ...prev.selected, value ]
                     return {
                         ...prev,
-                        rest: rest
+                        rest: rest,
+                        selected: selected
                     };
                 });
             } else {
-                setSelected((prev) => prev.filter((p) => p !== value));
                 setItems((prev) => {
                     let prevRest = prev.rest;
                     let rest = prev.products.find((p) => p._id === state._id);
+                    let selected = prev.selected.filter((p) => p !== value);
 
                     rest.currentQty = rest.qty;
-
-                    let findRestIndex = rest;
-                    console.log(findRestIndex)
-
                     return {
                         ...prev,
-                        rest: [...prevRest, rest]
+                        rest: [...prevRest, rest],
+                        selected: selected
                     };
                 });
             }
         }
     }
-
-    useEffect(() => {
-        console.log(items);
-    }, [items]);
  
     return (
         <Layout>
             <section className='section section__payment'>
                 <div className='container'>
-                    <Wic products={items.wic} selected={selected} onClick={onClick} />
+                    <Wic products={items.wic} selected={items.selected} onClick={onClick} />
                     <hr className='hr' />
                     <Rest products={items.rest} />
                 </div>
