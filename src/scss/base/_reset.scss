@@ -1,0 +1,31 @@
+@charset 'utf-8';
+
+html {
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* Works on Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #2c6486 #155379;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #5e6161;    
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #36393a;
+    border-radius: 0;
+}
